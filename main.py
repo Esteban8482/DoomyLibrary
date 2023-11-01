@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 from usuario import *
 from libro import *
 from prestamo import *
+from categoria import *
 
 usuarios = leer_usuarios()
 libros = leer_libros()
@@ -19,6 +20,9 @@ def menu():
     print("8. Devolver Libro")
     print("9. Editar usuario")
     print("10. Eliminar usuario")
+    print("11. Crear categoria")
+    print("12. Ver categorias")
+    print("13. Agregar subcategoria")
 
 while True:
     menu()
@@ -297,3 +301,27 @@ while True:
             print(f"Usuario con documento {documento_eliminar} ha sido eliminado con éxito.")
         else:
             print(f"No se encontró ningún usuario con el documento {documento_eliminar}.")
+
+    if opcion == "11":
+        nombre = input("Ingrese el nombre de la categoría: ")
+        nueva_categoria = Categoria(nombre)
+        guardar_categoria(nueva_categoria)
+        print("Categoría creada exitosamente.")
+    
+    if opcion == "12":
+        categorias = leer_categorias()
+        for categoria in categorias:
+            print(categoria.nombre)
+            for subcategoria in categoria.subcategorias:
+                print(f"  - {subcategoria}")
+    
+    if opcion == "13":
+        nombre = input("Ingrese el nombre de la categoría padre: ")
+        subcategoria = input("Ingrese el nombre de la subcategoría: ")
+        categorias = leer_categorias()
+        for categoria in categorias:
+            if categoria.nombre == nombre:
+                categoria.agregar_subcategoria(subcategoria)
+                guardar_categoria(categoria)  # Actualiza el archivo
+                print("Subcategoría agregada exitosamente.")
+                break

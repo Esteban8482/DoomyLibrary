@@ -1,13 +1,14 @@
 import json
 
 class Libro:
-    def __init__(self, titulo=None, autor=None, genero=None, ISBN=None, anio_publicacion = None, num_copias = 0):
+    def __init__(self, titulo=None, autor=None, genero=None, ISBN=None, anio_publicacion = None, num_copias = 0, categoria_id = None):
         self.titulo = titulo
         self.autor = autor
         self.genero = genero
         self.ISBN = ISBN
         self.anio_publicacion = anio_publicacion
         self.num_copias = num_copias
+        self.categoria_id = categoria_id
         
     def __str__(self):
         return f"Título: {self.titulo}, Autor: {self.autor}, Género: {self.genero}, ISBN: {self.ISBN}, " \
@@ -63,7 +64,8 @@ class Libro:
             "genero": self.genero,
             "ISBN": self.ISBN,
             "anio_publicacion": self.anio_publicacion,
-            "num_copias": self.num_copias
+            "num_copias": self.num_copias,
+            "categoria_id": self.categoria_id
         }
 
     @staticmethod
@@ -74,7 +76,8 @@ class Libro:
             dict_libro["genero"],
             dict_libro["ISBN"],
             dict_libro["anio_publicacion"],
-            dict_libro["num_copias"]
+            dict_libro["num_copias"],
+            dict_libro["categoria_id"]
         )
 
 def guardar_libro(libro, archivo="libros.json"):
