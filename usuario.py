@@ -1,15 +1,19 @@
 import json
 
+from prestamo import *
+
+prestamos = leer_prestamos()
+
 class Usuario:
-    def __init__(self, nombre=None, identificacion=None, correo=None, telefono=None):
+    def __init__(self, nombre=None, identificacion=None, correo=None, telefono=None, multa = 0):
         self.nombre = nombre
         self.identificacion = identificacion
         self.correo = correo
         self.telefono = telefono if telefono is not None else 0
+        self.multa = multa
     
     def __str__(self):        
         return f"Nombre: {self.nombre}, Identificación: {self.identificacion}, Correo: {self.correo}, Teléfono: {self.telefono}"
-
 
     def getNombre(self):
         return self.nombre
@@ -22,7 +26,6 @@ class Usuario:
     
     def getTelefono(self):
         return self.telefono
-    
 
     def editarUsuario(self, nombre, identificacion, correo, telefono):
         self.nombre = nombre
@@ -56,7 +59,8 @@ class Usuario:
             "nombre": self.nombre,
             "identificacion": self.identificacion,
             "correo": self.correo,
-            "telefono": self.telefono
+            "telefono": self.telefono,
+            "multa": self.multa
         }
 
         
@@ -77,6 +81,20 @@ class Usuario:
 
     def setTelefono(self, nuevo_telefono):
         self.telefono = nuevo_telefono
+    
+    def tiene_multas_pendientes(self, prestamos):
+        for prestamo in prestamos:
+            if prestamo.usuario_id == self.identificacion and prestamo.multa:
+                return True
+        return False
+    
+    # Método para añadir multa al usuario
+    def agregar_multa(self, monto):
+        self.multa += monto
+
+    # Método para obtener el monto de la multa
+    def obtener_multa(self):
+        return self.multa
 
 def guardar_usuario(usuario, archivo="usuarios.json"):
     try:
@@ -85,10 +103,23 @@ def guardar_usuario(usuario, archivo="usuarios.json"):
     except (FileNotFoundError, json.JSONDecodeError):
         usuarios = []
 
-    usuarios.append(usuario.to_dict())  # Convertir el usuario a diccionario antes de guardar
+    # Buscar si el usuario ya existe en la lista
+    usuario_existente = None
+    for u in usuarios:
+        if u["documento"] == usuario.documento:
+            usuario_existente = u
+            break
+
+    usuario_dict = usuario.to_dict()
+
+    if usuario_existente:  # Si el usuario ya existe, actualizarlo
+        usuarios[usuarios.index(usuario_existente)] = usuario_dict
+    else:  # Si no existe, añadirlo al final
+        usuarios.append(usuario_dict)
 
     with open(archivo, 'w') as file:
         json.dump(usuarios, file)
+
 
 def leer_usuarios(archivo="usuarios.json"):
     try:

@@ -1,6 +1,7 @@
 import json
 from datetime import datetime
 
+TARIFA_POR_DIA = 2000
 
 class Prestamo:
     def __init__(self, usuario_id, isbn_libro, fecha_prestamo, fecha_devolucion):
@@ -25,6 +26,15 @@ class Prestamo:
             datetime.strptime(data["fecha_prestamo"], '%Y-%m-%d'),
             datetime.strptime(data["fecha_devolucion"], '%Y-%m-%d')
         )
+        
+    def calcular_multa(self):
+        hoy = datetime.now()
+        if hoy > self.fecha_devolucion:
+            dias_retraso = (hoy - self.fecha_devolucion).days
+            multa = dias_retraso * TARIFA_POR_DIA  # Asumiendo una tarifa constante por día de retraso
+            self.multa = multa
+            return multa
+        return 0
 
 def guardar_prestamo(prestamo, archivo="prestamos.json"):
     try:

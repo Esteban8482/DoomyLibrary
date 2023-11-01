@@ -25,19 +25,26 @@ class Libro:
         return self.num_copias
     
     @staticmethod
-    def buscarLibro(criterio,valor, libros):
-        listaLibs = []
+    def buscarLibro(criterio, valor, libros):
+        listaLibros = []
         if criterio == "titulo":
             for libro in libros:
-                if libro is not None and libro.getTitulo().lower() == valor.lower():
-                    listaLibs.append(libro)
-            return listaLibs if listaLibs else None
-        
-        if criterio == "autor":
+                if libro.getTitulo().lower() == valor.lower():
+                    listaLibros.append(libro)
+        elif criterio == "autor":
             for libro in libros:
-                if libro is not None and libro.getAutor() == valor:
-                    listaLibs.append(libro)
-            return listaLibs if listaLibs else None
+                if libro.getAutor().lower() == valor.lower():
+                    listaLibros.append(libro)
+        elif criterio == "genero":
+            for libro in libros:
+                if libro.getGenero().lower() == valor.lower():
+                    listaLibros.append(libro)
+        elif criterio == "ISBN":
+            for libro in libros:
+                if libro.getISBN() == valor:
+                    listaLibros.append(libro)
+        return listaLibros if listaLibros else None
+
     
     def modificarTitulo(self, nuevo_titulo):
         self.titulo = nuevo_titulo

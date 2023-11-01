@@ -92,31 +92,37 @@ while True:
                 print(f"No se encontró ningún usuario con la identificacion {ident}.\n")
                 
     if opcion == "6":
-        print("Seleccione el criterio de busqueda para el libro: ")
-        print("0. Titulo")
+        print("Seleccione el criterio de búsqueda para el libro: ")
+        print("0. Título")
         print("1. Autor")
+        print("2. Género")
+        print("3. ISBN")
+        
         criterio = input("Ingrese la opción: ")
         
         if criterio == "0":
             criterio = "titulo"
-            titulo_libro = input("Ingrese el titulo del libro: ")
-            libro_encontrado = Libro.buscarLibro(criterio, titulo_libro, libros)
-            if libro_encontrado:
-                for libro in libro_encontrado:
-                    print(libro)
-                    
-            else:
-                print(f"No se encontró ningún libro con el titulo {titulo_libro}.\n")
-                
-        if criterio == "1":
+            titulo_libro = input("Ingrese el título del libro: ")
+        elif criterio == "1":
             criterio = "autor"
-            aut = input("Ingrese el nombre del autor: ")
-            libro_encontrado = Libro.buscarLibro(criterio, aut, libros)
-            if libro_encontrado:
-                for libro in libro_encontrado:
-                    print(libro)
-            else:
-                print(f"No se encontró ningún libro del autor {aut}.\n")  
+            titulo_libro = input("Ingrese el nombre del autor: ")
+        elif criterio == "2":
+            criterio = "genero"
+            titulo_libro = input("Ingrese el género del libro: ")
+        elif criterio == "3":
+            criterio = "ISBN"
+            titulo_libro = input("Ingrese el ISBN del libro: ")
+        else:
+            print("Opción inválida.")
+            continue  # Regresa al inicio del bucle
+
+        libro_encontrado = Libro.buscarLibro(criterio, titulo_libro, libros)
+    
+        if libro_encontrado:
+            for libro in libro_encontrado:
+                print(libro)
+        else:
+            print(f"No se encontró ningún libro con el {criterio} {titulo_libro}.\n")
     
     if opcion == "7":
         # Listar usuarios y seleccionar uno por documento
@@ -212,6 +218,15 @@ while True:
         if not prestamo_a_eliminar:
             print("No se encontró el préstamo asociado.")
             continue
+        
+        # Aquí es donde verificarías el retraso y calcularías la multa:
+        multa = prestamo.calcular_multa()
+        if multa > 0:
+            print(f"¡Atención! Hay un retraso en la devolución. Se ha generado una multa de ${multa}.")
+            
+            # Agregar multa al usuario seleccionado
+            usuario_seleccionado.agregar_multa(multa)
+            print(f"El total a pagar por el usuario {usuario_seleccionado.nombre} es de ${usuario_seleccionado.obtener_multa()}.")
 
         # Eliminar el préstamo del archivo JSON
         prestamos.remove(prestamo_a_eliminar)
